@@ -16,21 +16,26 @@ import loanRoutes from "./api/v1/routes/loanRoutes";
             version: string;
         }
 
-// Middleware START
+        // 1. Logging middleware (first)
+        if (process.env.NODE_ENV === "production") {
             app.use(accessLogger);
             app.use(errorLogger);
+        } else {
             app.use(consoleLogger);
+        }
 
+// 2. Body parser
             app.use(express.json());
+
+// 3. Routes
             app.use("/api/v1", loanRoutes);
-// Middleware END
 
 // Root route
-        app.get("/", (_req, res) => {
-            res.send("Hello World");
-        });
+            app.get("/", (_req, res) => {
+                res.send("Hello World");
+            });
 
-        // Health check route
+// Health check route
         app.get("/api/v1/health", (_req, res) => {
             const healthData: HealthCheckResponse = {
                 status: "OK",
@@ -42,7 +47,7 @@ import loanRoutes from "./api/v1/routes/loanRoutes";
             res.json(healthData);
 });
 
-// Error handler (must be last)
+// 4. Error handler (must be last)
         app.use(errorHandler);
 
 export default app;

@@ -29,8 +29,8 @@ import adminRoutes from "./api/v1/routes/adminRoutes";
 // 2. Body parser
             app.use(express.json());
 
-// 3. Routes
-            app.use("/api/v1", loanRoutes);
+// 3. // Routes
+            app.use("/api/v1/loans", loanRoutes);
             app.use("/api/v1/users", userRoutes);
             app.use("/api/v1/admin", adminRoutes);
 

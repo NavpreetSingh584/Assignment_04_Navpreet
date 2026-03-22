@@ -1,45 +1,37 @@
 import express, { Router } from "express";
+import * as loanController from "../controllers/loanController";
 import authenticate from "../middleware/authenticate";
 import isAuthorized from "../middleware/authorize";
+import { AuthorizationOptions } from "../models/authorizationOptions";
 
 const router: Router = express.Router();
 
-// Get all loans (any authenticated user)
-    router.get("/loans", authenticate, (_req, res) => {
-        res.send("All loans (authenticated user)");
-    });
+// "/api/v1/loans" prefixes all below routes
+router.get("/", authenticate, loanController.getLoans);
 
-// Create loan (admin, manager only)
-    router.post(
-        "/loans",
-        authenticate,
-        isAuthorized({ hasRole: ["admin", "manager"] }),
-        (_req, res) => {
-            res.send("Loan created (admin/manager only)");
-        }
+// sequential order authenticate -> isAuthorized -> createLoan
+router.post(
+    "/",
+    authenticate,
+    isAuthorized({ hasRole: ["admin", "manager"] } as AuthorizationOptions),
+    loanController.createLoan
 );
 
-// Update loan (admin, manager, or same user)
-    router.put(
-        "/loans/:id",
-        authenticate,
-        isAuthorized({
-            hasRole: ["admin", "manager"],
-            allowSameUser: true,
-        }),
-        (_req, res) => {
-            res.send("Loan updated");
-        }
+router.put(
+    "/:id",
+    authenticate,
+    isAuthorized({
+        hasRole: ["admin", "manager"],
+        allowSameUser: true,
+    } as AuthorizationOptions),
+    loanController.updateLoan
 );
 
-// Delete loan (admin, manager only)
-    router.delete(
-        "/loans/:id",
-        authenticate,
-        isAuthorized({ hasRole: ["admin", "manager"] }),
-        (_req, res) => {
-            res.send("Loan deleted");
-        }
+router.delete(
+    "/:id",
+    authenticate,
+    isAuthorized({ hasRole: ["admin", "manager"] } as AuthorizationOptions),
+    loanController.deleteLoan
 );
 
 export default router;

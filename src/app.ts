@@ -7,6 +7,7 @@ import {
 } from "./api/v1/middleware/logger";
 import loanRoutes from "./api/v1/routes/loanRoutes";
 import userRoutes from "./api/v1/routes/userRoutes";
+import adminRoutes from "./api/v1/routes/adminRoutes";
 
         const app: Express = express();
 
@@ -31,6 +32,7 @@ import userRoutes from "./api/v1/routes/userRoutes";
 // 3. Routes
             app.use("/api/v1", loanRoutes);
             app.use("/api/v1/users", userRoutes);
+            app.use("/api/v1/admin", adminRoutes);
 
 // Root route
             app.get("/", (_req, res) => {

@@ -19,11 +19,13 @@
   "homepage": "https://github.com/NavpreetSingh584/Assignment_04_Navpreet#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "firebase-admin": "^13.7.0"
+    "firebase-admin": "^13.7.0",
+    "morgan": "^1.10.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/morgan": "^1.9.10",
     "@types/node": "^25.5.0",
     "jest": "^30.3.0",
     "supertest": "^7.2.2",

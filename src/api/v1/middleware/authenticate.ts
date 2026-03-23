@@ -1,0 +1,57 @@
+import { Request, Response, NextFunction } from "express";
+import { DecodedIdToken } from "firebase-admin/auth";
+import { AuthenticationError } from "../errors/errors";
+import { auth } from "../../../config/firebaseConfig";
+
+/**
+ * Middleware to authenticate a user using Firebase ID token.
+ */
+const authenticate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const authHeader: string | undefined = req.headers.authorization;
+
+        const token: string | undefined = authHeader?.startsWith("Bearer ")
+            ? authHeader.split(" ")[1]
+            : undefined;
+
+        if (!token) {
+            throw new AuthenticationError(
+                "Unauthorized: No token provided",
+                "TOKEN_NOT_FOUND"
+            );
+        }
+
+        const decodedToken: DecodedIdToken = await auth.verifyIdToken(token);
+
+        // store user info for next middleware
+        res.locals.uid = decodedToken.uid;
+        res.locals.role = decodedToken.role;
+
+        next();
+    } catch (error: unknown) {
+        if (error instanceof AuthenticationError) {
+            next(error);
+        } else if (error instanceof Error) {
+
+            next(
+                new AuthenticationError(
+                    "Unauthorized: Invalid token",
+                    "INVALID_TOKEN"
+                )
+            );
+        } else {
+            next(
+                new AuthenticationError(
+                    "Unauthorized: Invalid token",
+                    "INVALID_TOKEN"
+                )
+            );
+        }
+    }
+};
+
+export default authenticate;

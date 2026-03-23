@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx ts-node src/server.ts",
-    "build": "npx tsc",
-    "test": "jest"
-  },
+  "dev": "ts-node src/server.ts",
+  "build": "npx tsc",
+  "start": "node dist/server.js",
+  "test": "jest"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NavpreetSingh584/Assignment_04_Navpreet.git"
